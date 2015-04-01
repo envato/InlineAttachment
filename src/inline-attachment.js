@@ -255,6 +255,7 @@
       remoteFilename = settings.remoteFilename(file);
     }
 
+    formData.append('Content-Type', file.type);
     formData.append(settings.uploadFieldName, file, remoteFilename);
 
     xhr.open('POST', settings.uploadUrl);
