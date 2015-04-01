@@ -230,6 +230,17 @@
       settings.setupFormData(formData, file);
     }
 
+    // Append the extra parameters to the formdata
+    // but do it before the file otherwise, otherwise things like direct
+    // uploads to s3 won't work
+    if (typeof settings.extraParams === "object") {
+      for (var key in settings.extraParams) {
+        if (settings.extraParams.hasOwnProperty(key)) {
+          formData.append(key, settings.extraParams[key]);
+        }
+      }
+    }
+
     // Attach the file. If coming from clipboard, add a default filename (only works in Chrome for now)
     // http://stackoverflow.com/questions/6664967/how-to-give-a-blob-uploaded-as-formdata-a-file-name
     if (file.name) {
@@ -245,15 +256,6 @@
     }
 
     formData.append(settings.uploadFieldName, file, remoteFilename);
-
-    // Append the extra parameters to the formdata
-    if (typeof settings.extraParams === "object") {
-      for (var key in settings.extraParams) {
-        if (settings.extraParams.hasOwnProperty(key)) {
-          formData.append(key, settings.extraParams[key]);
-        }
-      }
-    }
 
     xhr.open('POST', settings.uploadUrl);
 
